@@ -86,12 +86,16 @@
             // Guardamos el color elegido
             const colorElegido = document.getElementById('colorTexto');
 
+            // Combobox para escoger una fuente
             const combobox = document.getElementById("fuentes");
 
+            // Encontramos si una cantidad se encuentra dentro de un rango
             const estaEnRango = (cantidad, minimo, maximo) => (cantidad - minimo) / (maximo - minimo);
 
+            // Obtenemos la fuente escogida
             var fuenteEscogida = "";
             
+            // Función para guardar la fuente del texto
             combobox.addEventListener("change", function() {
                 fuenteEscogida = combobox.value;
             });
@@ -221,9 +225,9 @@
                     //textoIngresado.value = '';
                     
                 }else  if (usandoGoma) {
-                    // Si está usando la goma, borra un área circular alrededor del puntero del mouse
+                    // Recorremos todos los textos
                     for (let text of textos) {
-                        // Especificar el color del texto
+                        // Verificamos si el texto a borrar coincide con alguna de las coordenadas de los textos
                         if (estaEnRango(y1, (text.startY), (text.startY - 15)) >= 0 && estaEnRango(y1, (text.startY), (text.startY - 15)) <= 1) {
                             if (estaEnRango(x1, (text.startX), (text.startX + 80)) >= 0 && estaEnRango(x1, (text.startX ), (text.startX + 80)) <= 1) {
                                 const indice = textos.indexOf(text)
@@ -249,7 +253,9 @@
                         for (let text of textos) {
                             // Especificar el color del texto
                             ctx.fillStyle = text.color;
+                            // Especificar el tamaño de la fuente
                             ctx.font = `${text.fuente}px sans-serif`;
+                            // Escribir el texto
                             ctx.fillText(text.texto, text.startX, text.startY);
                         }
                     }
@@ -279,6 +285,7 @@
                 // Limpia el canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+                // Dibujamos la imagen
                 ctx.drawImage(image, 0, 0, 500,500);
                 
                 // Dibuja todas las líneas en el canvas
@@ -299,7 +306,7 @@
 
                 // Establecer la bandera como falsa
                 dibujar = false;
-                //addText = false;
+                addText = false; //
                 previsualizando = false;
 
             }
@@ -352,7 +359,7 @@
             canvas.addEventListener('mouseleave', () => {
                 // Establecer la bandera como falsa
                 dibujar = false;
-                //addText = false;
+                //addText = false; //
                 previsualizando = false;
             });
 
@@ -369,9 +376,10 @@
                         // Agrega el texto a la lista
                         textos.push({ startX: x1, startY: y1, texto: textoIngresado.value, color: colorElegido.value.toString(), fuente: fuenteEscogida});
                         
-                        // 
+                        // Mostramos un texto en el canvas
                         ctx.fillText(textoIngresado.value, x1, y1);
                         
+                        // Reiniciamos los valores por defecto
                         textoIngresado.style.position = "absolute"; 
                         textoIngresado.style.display = "none";
                         
