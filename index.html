@@ -9,19 +9,19 @@
     <body>
 
         <!-- Este es el botón para cargar una imagen -->
-        <button id="load-image-button">Cargar imagen</button>
+        <button id="load-image-button" style="background-color: #E5E5E5; color: #000;">Cargar imagen</button>
 
         <!-- Este es el botón para guardar la imagen editada -->
-        <button id="save-image-button">Guardar imagen</button>
+        <button id="save-image-button" style="background-color: #E5E5E5; color: #000;">Guardar imagen</button>
 
         <!-- Este es el botón para dibujar una linea -->
-        <button id="draw-line">Dibujar linea</button>
+        <button id="draw-line" style="background-color: #E5E5E5; color: #000;">Dibujar linea</button>
 
         <!-- Este es el botón para eliminar la ultima linea creada -->
-        <button id="clear-last-line">Eliminar linea</button>
+        <button id="clear-last-line" style="background-color: #E5E5E5; color: #000;">Eliminar linea</button>
 
         <!-- Este es el botón para agregar texto al canvas -->
-        <button id="add-text">Agregar texto</button>
+        <button id="add-text" style="background-color: #E5E5E5; color: #000;">Agregar texto</button>
 
         <!-- Elemento input para ingresar el texto -->
         <input type="text" id="txtTexto" placeholder="Ingrese el texto a escribir" style="position: absolute; display: none;">
@@ -47,7 +47,7 @@
         </select>
 
         <!-- Este es el botón para iniciar la goma -->
-        <button id="goma">Goma</button>
+        <button id="goma" style="background-color: #E5E5E5; color: #000;">Goma</button>
 
         <br>
         <p id="estado">Escoja una opción</p>
@@ -69,19 +69,28 @@
             // Obtenemos el texto del estado
             var textoEstado = document.getElementById('estado');
             
-            // Variable para almacenar la posi  ción de inicio y final de la línea
+            // Variable para almacenar la posición de inicio y final de la línea
             var previsualizando = false;
 
             // Lista de lineas creadas
-            let lines = [];
+            var lines = [];
 
             // Lista de textos creados
-            let textos = [];
+            var textos = [];
 
             var usandoGoma = false;
 
             // Creamos una imagen 
             var image = new Image();
+
+            // Variables para almacenar la posición de inicio y final de la línea
+            var x1, y1, x2, y2;
+
+            // Bandera para indicar si se está dibujando una línea
+            var dibujar = false;
+
+            // Bandera para indicar si se está escribiendo un texto
+            var addText = false;
 
             // Guardamos el color elegido
             const colorElegido = document.getElementById('colorTexto');
@@ -93,7 +102,7 @@
             const estaEnRango = (cantidad, minimo, maximo) => (cantidad - minimo) / (maximo - minimo);
 
             // Obtenemos la fuente escogida
-            var fuenteEscogida = "";
+            var fuenteEscogida = "8";
             
             // Función para guardar la fuente del texto
             combobox.addEventListener("change", function() {
@@ -107,14 +116,6 @@
                 var input = document.createElement('input');
 
                 input.type = 'file';
-                // Variables para almacenar la posición de inicio y final de la línea
-                var x1, y1, x2, y2;
-
-                // Bandera para indicar si se está dibujando una línea
-                var dibujar = false;
-
-                // Bandera para indicar si se está escribiendo un texto
-                var addText = false;
 
                 // Agregamos un evento al elemento de entrada de archivos
                 input.addEventListener('change', function() {
@@ -138,6 +139,17 @@
 
                 // Simulamos un click en el elemento de entrada de archivos para abrir el diálogo de selección de archivos
                 input.click();
+                document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                document.getElementById('draw-line').style.color = "#000";
+                document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('add-text').style.color = "#000";
+                document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                document.getElementById('goma').style.color = "#000";
+                // Establecer la bandera como falsa
+                dibujar = false;
+                addText = false; //
+                previsualizando = false;
+                usandoGoma = false;
             });
 
             // Agregamos un evento al botón de guardado de imágenes
@@ -148,37 +160,64 @@
                 link.href = canvas.toDataURL('image/png');
                 link.click();
                 textoEstado.innerHTML = "Imagen guardada"
+                document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                document.getElementById('draw-line').style.color = "#000";
+                document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('add-text').style.color = "#000";
+                document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                document.getElementById('goma').style.color = "#000";
+                // Establecer la bandera como falsa
+                dibujar = false;
+                addText = false; //
+                previsualizando = false;
+                usandoGoma = false;
             });
 
             // Agregamos un evento al botón de eliminar ultima linea dibujada
             document.getElementById('clear-last-line').addEventListener('click', function() {
 
-                // Eliminamos el ultimo elemento 
-                lines.pop()
+                if (lines.length > 0){
+                    // Eliminamos el ultimo elemento 
+                    lines.pop()
 
-                // Eliminamos el canvas
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    // Eliminamos el canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                // Dibujamos la imagen
-                ctx.drawImage(image, 0, 0, 500,500);
+                    // Dibujamos la imagen
+                    ctx.drawImage(image, 0, 0, 500,500);
 
-                // Dibuja todas las líneas en el canvas
-                for (let line of lines) {
-                    ctx.beginPath();
-                    ctx.moveTo(line.startX, line.startY);
-                    ctx.lineTo(line.endX, line.endY);
-                    ctx.stroke();
+                    // Dibuja todas las líneas en el canvas
+                    for (let line of lines) {
+                        ctx.beginPath();
+                        ctx.moveTo(line.startX, line.startY);
+                        ctx.lineTo(line.endX, line.endY);
+                        ctx.stroke();
+                    }
+
+                    // Dibuja todas los textos en el canvas
+                    for (let text of textos) {
+                        // Especificar el color del texto
+                        ctx.fillStyle = text.color;
+                        // Especificar la fuente del texto
+                        ctx.font = `${text.fuente}px sans-serif`;
+                        // Especificar el texto
+                        ctx.fillText(text.texto, text.startX, text.startY);
+                    }
+
+                    textoEstado.innerHTML = "Ultima linea eliminada"
                 }
 
-                // Dibuja todas los textos en el canvas
-                for (let text of textos) {
-                    // Especificar el color del texto
-                    ctx.fillStyle = text.color;
-                    ctx.font = `${text.fuente}px sans-serif`;
-                    ctx.fillText(text.texto, text.startX, text.startY);
-                }
-
-                textoEstado.innerHTML = "Ultima linea eliminada"
+                // Establecer la bandera como falsa
+                dibujar = false;
+                addText = false; //
+                previsualizando = false;
+                usandoGoma = false;
+                document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                document.getElementById('draw-line').style.color = "#000";
+                document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('add-text').style.color = "#000";
+                document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                document.getElementById('goma').style.color = "#000";
 
             });
 
@@ -186,12 +225,27 @@
             document.getElementById('add-text').addEventListener('click', function() {
                 addText = true;
                 dibujar = false;
+                previsualizando = false;
+                usandoGoma = false;
+                document.getElementById('add-text').style.backgroundColor = "#7D3C98";
+                document.getElementById('add-text').style.color = "#fff";
+                document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                document.getElementById('draw-line').style.color = "#000";
+                document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                document.getElementById('goma').style.color = "#000";
             });
 
             // Agregamos un evento al botón dibujar linea
             document.getElementById('draw-line').addEventListener('click', function() {
                 dibujar = true;
                 addText = false;
+                usandoGoma = false;
+                document.getElementById('draw-line').style.backgroundColor = "#7D3C98";
+                document.getElementById('draw-line').style.color = "#fff";
+                document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('add-text').style.color = "#000";
+                document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                document.getElementById('goma').style.color = "#000";
                 if (previsualizando){
                     previsualizando = false;
                 }
@@ -200,6 +254,16 @@
             // Agregamos un evento al botón goma
             document.getElementById('goma').addEventListener('click', function() {
                 usandoGoma = true;
+                // Establecer la bandera como falsa
+                dibujar = false;
+                addText = false; //
+                previsualizando = false;
+                document.getElementById('goma').style.backgroundColor = "#7D3C98";
+                document.getElementById('goma').style.color = "#fff";
+                document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                document.getElementById('draw-line').style.color = "#000";
+                document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('add-text').style.color = "#000";
             });
 
             // Función para manejar el evento mousedown
@@ -222,7 +286,7 @@
 
                     textoEstado.innerHTML = "Agregando texto"
 
-                    //textoIngresado.value = '';
+                    textoIngresado.value = '';
                     
                 }else  if (usandoGoma) {
                     // Recorremos todos los textos
@@ -259,9 +323,50 @@
                             ctx.fillText(text.texto, text.startX, text.startY);
                         }
                     }
-                    usandoGoma = false;
                 }
             }
+
+            // Función para manejar el evento mousemove
+            canvas.addEventListener('mousemove', (event) => {
+                // Si no se está dibujando, no hacer nada
+                if (!dibujar) return;
+                    
+                if (previsualizando){
+
+                    endX = event.offsetX;
+                    endY = event.offsetY;
+
+                    // Limpia el canvas para eliminar la línea anterior
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.drawImage(image, 0, 0, 500,500);
+
+                    // Dibuja todas las líneas en el canvas
+                    for (let line of lines) {
+                        ctx.beginPath();
+                        ctx.moveTo(line.startX, line.startY);
+                        ctx.lineTo(line.endX, line.endY);
+                        ctx.stroke();
+                    }
+
+                    // Dibuja todas los textos en el canvas
+                    for (let text of textos) {
+                        // Especificar el color del texto
+                        ctx.fillStyle = text.color;
+                        // Especificamos el tamaño de fuente
+                        ctx.font = `${text.fuente}px sans-serif`;
+                        // Escribir el texto
+                        ctx.fillText(text.texto, text.startX, text.startY);
+                    }
+                    
+                    // Dibuja la línea en el canvas
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(endX, endY);
+                    ctx.stroke();
+
+                }
+            });
 
             // Función para manejar el evento mouseup
             function mouseUp(e) {
@@ -300,13 +405,12 @@
                 for (let text of textos) {
                     // Especificar el color del texto
                     ctx.fillStyle = text.color;
+                    // Especificar el tamaño de la fuente
                     ctx.font = `${text.fuente}px sans-serif`;
+                    // Escribir el texto
                     ctx.fillText(text.texto, text.startX, text.startY);
                 }
 
-                // Establecer la bandera como falsa
-                dibujar = false;
-                addText = false; //
                 previsualizando = false;
 
             }
@@ -315,53 +419,13 @@
             canvas.addEventListener('mousedown', mouseDown);
             canvas.addEventListener('mouseup', mouseUp);
 
-            // Función para manejar el evento mousemove
-            canvas.addEventListener('mousemove', (event) => {
-                // Si no se está dibujando, no hacer nada
-                if (!dibujar) return;
-                    
-                if (previsualizando){
-
-                    endX = event.offsetX;
-                    endY = event.offsetY;
-
-                    // Limpia el canvas para eliminar la línea anterior
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                    ctx.drawImage(image, 0, 0, 500,500);
-
-                    // Dibuja todas las líneas en el canvas
-                    for (let line of lines) {
-                        ctx.beginPath();
-                        ctx.moveTo(line.startX, line.startY);
-                        ctx.lineTo(line.endX, line.endY);
-                        ctx.stroke();
-                    }
-
-                    // Dibuja todas los textos en el canvas
-                    for (let text of textos) {
-                        // Especificar el color del texto
-                        ctx.fillStyle = text.color;
-                        // Especificamos el tamaño de fuente
-                        ctx.font = `${text.fuente}px sans-serif`;
-                        ctx.fillText(text.texto, text.startX, text.startY);
-                    }
-                    
-                    // Dibuja la línea en el canvas
-                    ctx.beginPath();
-                    ctx.moveTo(x1, y1);
-                    ctx.lineTo(endX, endY);
-                    ctx.stroke();
-
-                }
-            });
-
+            /*
             canvas.addEventListener('mouseleave', () => {
                 // Establecer la bandera como falsa
                 dibujar = false;
                 //addText = false; //
                 previsualizando = false;
-            });
+            });*/
 
             document.addEventListener("keydown", function(event) {
                 if (event.keyCode === 13) {
@@ -383,7 +447,6 @@
                         textoIngresado.style.position = "absolute"; 
                         textoIngresado.style.display = "none";
                         
-                        addText = false;
                     }
                 }
             });           
