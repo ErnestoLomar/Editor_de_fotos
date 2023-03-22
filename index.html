@@ -184,20 +184,37 @@
             });
 
             document.getElementById("edit-text").onclick = function() {
-                document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
-                document.getElementById('draw-line').style.color = "#000";
-                document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
-                document.getElementById('add-text').style.color = "#000";
-                document.getElementById('edit-text').style.backgroundColor = "#7D3C98";
-                document.getElementById('edit-text').style.color = "#fff";
-                document.getElementById('goma').style.backgroundColor = "#E5E5E5";
-                document.getElementById('goma').style.color = "#000";
-                // Establecer la bandera como falsa
-                dibujar = false;
-                addText = false; //
-                previsualizando = false;
-                usandoGoma = false;
-                editarTextos = true;
+                if (!editarTextos){
+                    document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('draw-line').style.color = "#000";
+                    document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('add-text').style.color = "#000";
+                    document.getElementById('edit-text').style.backgroundColor = "#7D3C98";
+                    document.getElementById('edit-text').style.color = "#fff";
+                    document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('goma').style.color = "#000";
+                    // Establecer la bandera como falsa
+                    dibujar = false;
+                    addText = false; //
+                    previsualizando = false;
+                    usandoGoma = false;
+                    editarTextos = true;
+                }else if (editarTextos){
+                    document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('draw-line').style.color = "#000";
+                    document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('add-text').style.color = "#000";
+                    document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('edit-text').style.color = "#000";
+                    document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('goma').style.color = "#000";
+                    // Establecer la bandera como falsa
+                    dibujar = false;
+                    addText = false; //
+                    previsualizando = false;
+                    usandoGoma = false;
+                    editarTextos = false;
+                }
             };
 
             document.getElementById("urlImagen").onclick = function() {
@@ -297,35 +314,66 @@
 
             // Agregamos un evento al botón de agregar texto
             document.getElementById('add-text').addEventListener('click', function() {
-                addText = true;
-                dibujar = false;
-                previsualizando = false;
-                usandoGoma = false;
-                editarTextos = false;
-                document.getElementById('add-text').style.backgroundColor = "#7D3C98";
-                document.getElementById('add-text').style.color = "#fff";
-                document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
-                document.getElementById('edit-text').style.color = "#000";
-                document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
-                document.getElementById('draw-line').style.color = "#000";
-                document.getElementById('goma').style.backgroundColor = "#E5E5E5";
-                document.getElementById('goma').style.color = "#000";
+                if (!addText){
+                    addText = true;
+                    dibujar = false;
+                    previsualizando = false;
+                    usandoGoma = false;
+                    editarTextos = false;
+                    document.getElementById('add-text').style.backgroundColor = "#7D3C98";
+                    document.getElementById('add-text').style.color = "#fff";
+                    document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('edit-text').style.color = "#000";
+                    document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('draw-line').style.color = "#000";
+                    document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('goma').style.color = "#000";
+                }else if (addText){
+                    addText = false;
+                    dibujar = false;
+                    previsualizando = false;
+                    usandoGoma = false;
+                    editarTextos = false;
+                    document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('add-text').style.color = "#000";
+                    document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('edit-text').style.color = "#000";
+                    document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('draw-line').style.color = "#000";
+                    document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('goma').style.color = "#000";
+                }
             });
 
             // Agregamos un evento al botón dibujar linea
             document.getElementById('draw-line').addEventListener('click', function() {
-                dibujar = true;
-                addText = false;
-                usandoGoma = false;
-                editarTextos = false;
-                document.getElementById('draw-line').style.backgroundColor = "#7D3C98";
-                document.getElementById('draw-line').style.color = "#fff";
-                document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
-                document.getElementById('add-text').style.color = "#000";
-                document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
-                document.getElementById('edit-text').style.color = "#000";
-                document.getElementById('goma').style.backgroundColor = "#E5E5E5";
-                document.getElementById('goma').style.color = "#000";
+                if (!dibujar){
+                    dibujar = true;
+                    addText = false;
+                    usandoGoma = false;
+                    editarTextos = false;
+                    document.getElementById('draw-line').style.backgroundColor = "#7D3C98";
+                    document.getElementById('draw-line').style.color = "#fff";
+                    document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('add-text').style.color = "#000";
+                    document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('edit-text').style.color = "#000";
+                    document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('goma').style.color = "#000";
+                }else if (dibujar){
+                    dibujar = false;
+                    addText = false;
+                    usandoGoma = false;
+                    editarTextos = false;
+                    document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('draw-line').style.color = "#000";
+                    document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('add-text').style.color = "#000";
+                    document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('edit-text').style.color = "#000";
+                    document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('goma').style.color = "#000";
+                }
                 if (previsualizando){
                     previsualizando = false;
                 }
@@ -333,20 +381,35 @@
 
             // Agregamos un evento al botón goma
             document.getElementById('goma').addEventListener('click', function() {
-                usandoGoma = true;
-                // Establecer la bandera como falsa
-                dibujar = false;
-                addText = false; //
-                previsualizando = false;
-                editarTextos = false;
-                document.getElementById('goma').style.backgroundColor = "#7D3C98";
-                document.getElementById('goma').style.color = "#fff";
-                document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
-                document.getElementById('draw-line').style.color = "#000";
-                document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
-                document.getElementById('add-text').style.color = "#000";
-                document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
-                document.getElementById('edit-text').style.color = "#000";
+                if (!usandoGoma){
+                    usandoGoma = true;
+                    dibujar = false;
+                    addText = false; //
+                    previsualizando = false;
+                    editarTextos = false;
+                    document.getElementById('goma').style.backgroundColor = "#7D3C98";
+                    document.getElementById('goma').style.color = "#fff";
+                    document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('draw-line').style.color = "#000";
+                    document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('add-text').style.color = "#000";
+                    document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('edit-text').style.color = "#000";
+                }else if (usandoGoma){
+                    usandoGoma = false;
+                    dibujar = false;
+                    addText = false;
+                    previsualizando = false;
+                    editarTextos = false;
+                    document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('goma').style.color = "#000";
+                    document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('draw-line').style.color = "#000";
+                    document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('add-text').style.color = "#000";
+                    document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('edit-text').style.color = "#000";
+                }
             });
 
             // Función para manejar el evento mousedown
@@ -453,12 +516,14 @@
 
                     // Dibuja todas los textos en el canvas
                     for (let text of textos) {
-                        // Especificar el color del texto
-                        ctx.fillStyle = text.color;
-                        // Especificamos el tamaño de fuente
-                        ctx.font = `${text.fuente}px sans-serif`;
-                        // Escribir el texto
-                        ctx.fillText(text.texto, text.startX, text.startY);
+                        if(textoAArrastrar.id != text.id){
+                            // Especificar el color del texto
+                            ctx.fillStyle = text.color;
+                            // Especificamos el tamaño de fuente
+                            ctx.font = `${text.fuente}px sans-serif`;
+                            // Escribir el texto
+                            ctx.fillText(text.texto, text.startX, text.startY);
+                        }
                     }
 
                     var xArrastrado = event.clientX - canvas.offsetLeft;
@@ -466,7 +531,9 @@
     
                     var dx = xArrastrado - xInicial;
                     var dy = yArrastrado - yInicial;
-    
+                    
+                    ctx.fillStyle = textoAArrastrar.color;
+                    ctx.font = `${textoAArrastrar.fuente}px sans-serif`;
                     ctx.fillText(textoAArrastrar.texto, xInicial + dx, yInicial + dy);
                     textoAArrastrar.startX = xInicial + dx;
                     textoAArrastrar.startY = yInicial + dy;
