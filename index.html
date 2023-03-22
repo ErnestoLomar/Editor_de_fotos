@@ -23,6 +23,9 @@
         <!-- Este es el botón para agregar texto al canvas -->
         <button id="add-text" style="background-color: #E5E5E5; color: #000;">Agregar texto</button>
 
+        <!-- Este es el botón para editar la posición de un texto-->
+        <button id="edit-text" style="background-color: #E5E5E5; color: #000;">Editar posición de texto</button>
+
         <!-- Elemento input para ingresar el texto -->
         <input type="text" id="txtTexto" placeholder="Ingrese el texto a escribir" style="position: absolute; display: none;">
 
@@ -85,6 +88,7 @@
 
             // Lista de textos creados
             var textos = [];
+            var contadorDeTextos = 0;
 
             var usandoGoma = false;
 
@@ -99,6 +103,12 @@
 
             // Bandera para indicar si se está escribiendo un texto
             var addText = false;
+
+            // Bandera para indicar si se va a arrastrar un texto o no
+            var textoArrastrado = false;
+            var editarTextos = false;
+            var xInicial, yInicial;
+            var textoAArrastrar = null;
 
             // Guardamos el color elegido
             const colorElegido = document.getElementById('colorTexto');
@@ -161,6 +171,8 @@
                 document.getElementById('draw-line').style.color = "#000";
                 document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
                 document.getElementById('add-text').style.color = "#000";
+                document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('edit-text').style.color = "#000";
                 document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                 document.getElementById('goma').style.color = "#000";
                 // Establecer la bandera como falsa
@@ -168,7 +180,25 @@
                 addText = false; //
                 previsualizando = false;
                 usandoGoma = false;
+                editarTextos = false;
             });
+
+            document.getElementById("edit-text").onclick = function() {
+                document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                document.getElementById('draw-line').style.color = "#000";
+                document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('add-text').style.color = "#000";
+                document.getElementById('edit-text').style.backgroundColor = "#7D3C98";
+                document.getElementById('edit-text').style.color = "#fff";
+                document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                document.getElementById('goma').style.color = "#000";
+                // Establecer la bandera como falsa
+                dibujar = false;
+                addText = false; //
+                previsualizando = false;
+                usandoGoma = false;
+                editarTextos = true;
+            };
 
             document.getElementById("urlImagen").onclick = function() {
                 image.src = 'img1.jpg';
@@ -198,6 +228,8 @@
                 document.getElementById('draw-line').style.color = "#000";
                 document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
                 document.getElementById('add-text').style.color = "#000";
+                document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('edit-text').style.color = "#000";
                 document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                 document.getElementById('goma').style.color = "#000";
                 // Establecer la bandera como falsa
@@ -205,6 +237,7 @@
                 addText = false; //
                 previsualizando = false;
                 usandoGoma = false;
+                editarTextos = false;
             });
 
             // Agregamos un evento al botón de eliminar ultima linea dibujada
@@ -250,10 +283,13 @@
                 addText = false; //
                 previsualizando = false;
                 usandoGoma = false;
+                editarTextos = false;
                 document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
                 document.getElementById('draw-line').style.color = "#000";
                 document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
                 document.getElementById('add-text').style.color = "#000";
+                document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('edit-text').style.color = "#000";
                 document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                 document.getElementById('goma').style.color = "#000";
 
@@ -265,8 +301,11 @@
                 dibujar = false;
                 previsualizando = false;
                 usandoGoma = false;
+                editarTextos = false;
                 document.getElementById('add-text').style.backgroundColor = "#7D3C98";
                 document.getElementById('add-text').style.color = "#fff";
+                document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('edit-text').style.color = "#000";
                 document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
                 document.getElementById('draw-line').style.color = "#000";
                 document.getElementById('goma').style.backgroundColor = "#E5E5E5";
@@ -278,10 +317,13 @@
                 dibujar = true;
                 addText = false;
                 usandoGoma = false;
+                editarTextos = false;
                 document.getElementById('draw-line').style.backgroundColor = "#7D3C98";
                 document.getElementById('draw-line').style.color = "#fff";
                 document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
                 document.getElementById('add-text').style.color = "#000";
+                document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('edit-text').style.color = "#000";
                 document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                 document.getElementById('goma').style.color = "#000";
                 if (previsualizando){
@@ -296,12 +338,15 @@
                 dibujar = false;
                 addText = false; //
                 previsualizando = false;
+                editarTextos = false;
                 document.getElementById('goma').style.backgroundColor = "#7D3C98";
                 document.getElementById('goma').style.color = "#fff";
                 document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
                 document.getElementById('draw-line').style.color = "#000";
                 document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
                 document.getElementById('add-text').style.color = "#000";
+                document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('edit-text').style.color = "#000";
             });
 
             // Función para manejar el evento mousedown
@@ -365,11 +410,76 @@
                             ctx.fillText(text.texto, text.startX, text.startY);
                         }
                     }
+                }else if (editarTextos){
+                    // Recorremos todos los textos
+                    for (let text of textos) {
+                        // Verificamos si el texto a borrar coincide con alguna de las coordenadas de los textos
+                        if (estaEnRango(y1, (text.startY), (text.startY - 15)) >= 0 && estaEnRango(y1, (text.startY), (text.startY - 15)) <= 1) {
+                            if (estaEnRango(x1, (text.startX), (text.startX + 80)) >= 0 && estaEnRango(x1, (text.startX ), (text.startX + 80)) <= 1) {
+                                textoArrastrado = true;
+                                xInicial = x1;
+                                yInicial = y1;
+                                textoAArrastrar = text;
+                            }
+                        }
+                    }
                 }
             }
 
             // Función para manejar el evento mousemove
             canvas.addEventListener('mousemove', (event) => {
+
+                if (textoArrastrado) {
+
+                    endX = event.offsetX;
+                    endY = event.offsetY;
+
+                    // Limpia el canvas para eliminar la línea anterior
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // Agregamos el color de fondo del canvas
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.drawImage(image, 40, 40);
+
+                    // Dibuja todas las líneas en el canvas
+                    for (let line of lines) {
+                        ctx.beginPath();
+                        ctx.moveTo(line.startX, line.startY);
+                        ctx.lineTo(line.endX, line.endY);
+                        ctx.stroke();
+                    }
+
+                    // Dibuja todas los textos en el canvas
+                    for (let text of textos) {
+                        // Especificar el color del texto
+                        ctx.fillStyle = text.color;
+                        // Especificamos el tamaño de fuente
+                        ctx.font = `${text.fuente}px sans-serif`;
+                        // Escribir el texto
+                        ctx.fillText(text.texto, text.startX, text.startY);
+                    }
+
+                    var xArrastrado = event.clientX - canvas.offsetLeft;
+                    var yArrastrado = event.clientY - canvas.offsetTop;
+    
+                    var dx = xArrastrado - xInicial;
+                    var dy = yArrastrado - yInicial;
+    
+                    ctx.fillText(textoAArrastrar.texto, xInicial + dx, yInicial + dy);
+                    textoAArrastrar.startX = xInicial + dx;
+                    textoAArrastrar.startY = yInicial + dy;
+
+                    for (let text of textos) {
+                        if (text.id == textoAArrastrar.id){
+                            text.startX = textoAArrastrar.startX;
+                            text.startY = textoAArrastrar.startY;
+                        }
+                    }
+                    
+                }
+
                 // Si no se está dibujando, no hacer nada
                 if (!dibujar) return;
 
@@ -421,6 +531,8 @@
 
             // Función para manejar el evento mouseup
             function mouseUp(e) {
+
+                textoArrastrado = false;
 
                 // Si no se está dibujando, no hacer nada
                 if (!dibujar) return;
@@ -493,7 +605,7 @@
                         ctx.font = `${fuenteEscogida}px sans-serif`;
 
                         // Agrega el texto a la lista
-                        textos.push({ startX: x1, startY: y1, texto: textoIngresado.value, color: colorElegido.value.toString(), fuente: fuenteEscogida});
+                        textos.push({ startX: x1, startY: y1, texto: textoIngresado.value, color: colorElegido.value.toString(), fuente: fuenteEscogida, id: contadorDeTextos+=1});
                         
                         // Mostramos un texto en el canvas
                         ctx.fillText(textoIngresado.value, x1, y1);

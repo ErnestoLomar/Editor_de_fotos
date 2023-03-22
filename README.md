@@ -2,7 +2,9 @@
 
 **Ernesto Lomar**
 
-- E.L.v1.4:
+- EL.v1.5:
+  - Se puede arrastrar un texto para poderlo cambiar de ubicación de una manera mas dinámica. 
+- EL.v1.4:
   - Se puede cargar una imagen al canvas desde un URl o tener una imagen ya precargada.
   - El canvas se adapta a las dimensiones de la imagen seleccionada.
   - Se agrego un espacio extra en las orillas del canvas para que sea más fácil agregar textos/lineas.
