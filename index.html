@@ -50,7 +50,13 @@
         </select>
 
         <!-- Este es el botón para iniciar la goma -->
-        <button id="goma" style="background-color: #E5E5E5; color: #000;">Goma</button>
+        <button id="goma" style="background-color: #E5E5E5; color: #000;">Goma de textos</button>
+
+        <!-- Este es el botón para iniciar la barita mágica -->
+        <button id="baritaMagica" style="background-color: #E5E5E5; color: #000;">Barita Mágica</button>
+
+        <!-- Este es el botón para deshacer cambios de la barita mágica -->
+        <button id="deshacerCambios" style="background-color: #E5E5E5; color: #000;">Deshacer cambios</button>
 
         <!-- Este es el botón para iniciar la goma -->
         <button id="urlImagen" style="background-color: #E5E5E5; color: #000;">Url Imagen</button>
@@ -60,7 +66,7 @@
         <br>
 
         <!-- Este es el contenedor donde se dibujara el canvas -->
-        <div id="canvas-container"></div>
+        <div id="canvas-container" style="background-color: white;"></div>
 
         <!-- Este es el script que contiene el código JavaScript -->
         <script>
@@ -92,6 +98,10 @@
 
             var usandoGoma = false;
 
+            var usandoBaritaMagica = false;
+
+            var mousePresionado = false;
+
             // Creamos una imagen 
             var image = new Image();
 
@@ -109,6 +119,7 @@
             var editarTextos = false;
             var xInicial, yInicial;
             var textoAArrastrar = null;
+            var backupImage = null;
 
             // Guardamos el color elegido
             const colorElegido = document.getElementById('colorTexto');
@@ -157,6 +168,7 @@
                         ctx.fillStyle = "red";
                         ctx.fillRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(image, 40, 40);
+                        backupImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         textos = [];
                         lines = [];
                     });
@@ -175,12 +187,15 @@
                 document.getElementById('edit-text').style.color = "#000";
                 document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                 document.getElementById('goma').style.color = "#000";
+                document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                document.getElementById('baritaMagica').style.color = "#000";
                 // Establecer la bandera como falsa
                 dibujar = false;
                 addText = false; //
                 previsualizando = false;
                 usandoGoma = false;
                 editarTextos = false;
+                usandoBaritaMagica = false;
             });
 
             document.getElementById("edit-text").onclick = function() {
@@ -193,11 +208,14 @@
                     document.getElementById('edit-text').style.color = "#fff";
                     document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                     document.getElementById('goma').style.color = "#000";
+                    document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('baritaMagica').style.color = "#000";
                     // Establecer la bandera como falsa
                     dibujar = false;
                     addText = false; //
                     previsualizando = false;
                     usandoGoma = false;
+                    usandoBaritaMagica = false;
                     editarTextos = true;
                 }else if (editarTextos){
                     document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
@@ -208,11 +226,14 @@
                     document.getElementById('edit-text').style.color = "#000";
                     document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                     document.getElementById('goma').style.color = "#000";
+                    document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('baritaMagica').style.color = "#000";
                     // Establecer la bandera como falsa
                     dibujar = false;
                     addText = false; //
                     previsualizando = false;
                     usandoGoma = false;
+                    usandoBaritaMagica = false;
                     editarTextos = false;
                 }
             };
@@ -249,11 +270,14 @@
                 document.getElementById('edit-text').style.color = "#000";
                 document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                 document.getElementById('goma').style.color = "#000";
+                document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                document.getElementById('baritaMagica').style.color = "#000";
                 // Establecer la bandera como falsa
                 dibujar = false;
                 addText = false; //
                 previsualizando = false;
                 usandoGoma = false;
+                usandoBaritaMagica = false;
                 editarTextos = false;
             });
 
@@ -300,6 +324,7 @@
                 addText = false; //
                 previsualizando = false;
                 usandoGoma = false;
+                usandoBaritaMagica = false;
                 editarTextos = false;
                 document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
                 document.getElementById('draw-line').style.color = "#000";
@@ -309,6 +334,8 @@
                 document.getElementById('edit-text').style.color = "#000";
                 document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                 document.getElementById('goma').style.color = "#000";
+                document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                document.getElementById('baritaMagica').style.color = "#000";
 
             });
 
@@ -319,6 +346,7 @@
                     dibujar = false;
                     previsualizando = false;
                     usandoGoma = false;
+                    usandoBaritaMagica = false;
                     editarTextos = false;
                     document.getElementById('add-text').style.backgroundColor = "#7D3C98";
                     document.getElementById('add-text').style.color = "#fff";
@@ -328,11 +356,14 @@
                     document.getElementById('draw-line').style.color = "#000";
                     document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                     document.getElementById('goma').style.color = "#000";
+                    document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('baritaMagica').style.color = "#000";
                 }else if (addText){
                     addText = false;
                     dibujar = false;
                     previsualizando = false;
                     usandoGoma = false;
+                    usandoBaritaMagica = false;
                     editarTextos = false;
                     document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
                     document.getElementById('add-text').style.color = "#000";
@@ -342,6 +373,8 @@
                     document.getElementById('draw-line').style.color = "#000";
                     document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                     document.getElementById('goma').style.color = "#000";
+                    document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('baritaMagica').style.color = "#000";
                 }
             });
 
@@ -352,6 +385,7 @@
                     addText = false;
                     usandoGoma = false;
                     editarTextos = false;
+                    usandoBaritaMagica = false;
                     document.getElementById('draw-line').style.backgroundColor = "#7D3C98";
                     document.getElementById('draw-line').style.color = "#fff";
                     document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
@@ -360,10 +394,13 @@
                     document.getElementById('edit-text').style.color = "#000";
                     document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                     document.getElementById('goma').style.color = "#000";
+                    document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('baritaMagica').style.color = "#000";
                 }else if (dibujar){
                     dibujar = false;
                     addText = false;
                     usandoGoma = false;
+                    usandoBaritaMagica = false;
                     editarTextos = false;
                     document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
                     document.getElementById('draw-line').style.color = "#000";
@@ -373,6 +410,8 @@
                     document.getElementById('edit-text').style.color = "#000";
                     document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                     document.getElementById('goma').style.color = "#000";
+                    document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('baritaMagica').style.color = "#000";
                 }
                 if (previsualizando){
                     previsualizando = false;
@@ -383,12 +422,15 @@
             document.getElementById('goma').addEventListener('click', function() {
                 if (!usandoGoma){
                     usandoGoma = true;
+                    usandoBaritaMagica = false;
                     dibujar = false;
                     addText = false; //
                     previsualizando = false;
                     editarTextos = false;
                     document.getElementById('goma').style.backgroundColor = "#7D3C98";
                     document.getElementById('goma').style.color = "#fff";
+                    document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('baritaMagica').style.color = "#000";
                     document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
                     document.getElementById('draw-line').style.color = "#000";
                     document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
@@ -397,10 +439,53 @@
                     document.getElementById('edit-text').style.color = "#000";
                 }else if (usandoGoma){
                     usandoGoma = false;
+                    usandoBaritaMagica = false;
                     dibujar = false;
                     addText = false;
                     previsualizando = false;
                     editarTextos = false;
+                    document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('goma').style.color = "#000";
+                    document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('baritaMagica').style.color = "#000";
+                    document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('draw-line').style.color = "#000";
+                    document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('add-text').style.color = "#000";
+                    document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('edit-text').style.color = "#000";
+                }
+            });
+
+
+            // Agregamos un evento al botón barita magica
+            document.getElementById('baritaMagica').addEventListener('click', function() {
+                if (!usandoBaritaMagica){
+                    usandoGoma = false;
+                    usandoBaritaMagica = true;
+                    dibujar = false;
+                    addText = false; //
+                    previsualizando = false;
+                    editarTextos = false;
+                    document.getElementById('baritaMagica').style.backgroundColor = "#7D3C98";
+                    document.getElementById('baritaMagica').style.color = "#fff";
+                    document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('goma').style.color = "#000";
+                    document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('draw-line').style.color = "#000";
+                    document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('add-text').style.color = "#000";
+                    document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('edit-text').style.color = "#000";
+                }else if (usandoBaritaMagica){
+                    usandoGoma = false;
+                    usandoBaritaMagica = false;
+                    dibujar = false;
+                    addText = false;
+                    previsualizando = false;
+                    editarTextos = false;
+                    document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                    document.getElementById('baritaMagica').style.color = "#000";
                     document.getElementById('goma').style.backgroundColor = "#E5E5E5";
                     document.getElementById('goma').style.color = "#000";
                     document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
@@ -410,6 +495,21 @@
                     document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
                     document.getElementById('edit-text').style.color = "#000";
                 }
+            });
+
+            document.getElementById('deshacerCambios').addEventListener('click', function() {
+                ctx.putImageData(backupImage, 0, 0);
+                image = ctx.getImageData(0, 0, canvas.width, canvas.height);    
+                document.getElementById('baritaMagica').style.backgroundColor = "#E5E5E5";
+                document.getElementById('baritaMagica').style.color = "#000";
+                document.getElementById('goma').style.backgroundColor = "#E5E5E5";
+                document.getElementById('goma').style.color = "#000";
+                document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
+                document.getElementById('draw-line').style.color = "#000";
+                document.getElementById('add-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('add-text').style.color = "#000";
+                document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
+                document.getElementById('edit-text').style.color = "#000";
             });
 
             // Función para manejar el evento mousedown
@@ -486,6 +586,12 @@
                             }
                         }
                     }
+                }else if (usandoBaritaMagica){
+                    backupImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    ctx.clearRect(x1, y1, 10, 10);
+                    ctx.fillStyle = "white";
+                    ctx.fillRect(x1, y1, 10, 10);
+                    mousePresionado = true;
                 }
             }
 
@@ -547,6 +653,15 @@
                     
                 }
 
+                if (usandoBaritaMagica && mousePresionado){
+
+                    xBorrar = event.pageX - canvas.offsetLeft;
+                    yBorrar = event.pageY - canvas.offsetTop;
+                    ctx.clearRect(xBorrar, yBorrar, 10, 10);
+                    ctx.fillStyle = "white";
+                    ctx.fillRect(xBorrar, yBorrar, 10, 10);
+                }
+
                 // Si no se está dibujando, no hacer nada
                 if (!dibujar) return;
 
@@ -600,6 +715,7 @@
             function mouseUp(e) {
 
                 textoArrastrado = false;
+                mousePresionado = false;
 
                 // Si no se está dibujando, no hacer nada
                 if (!dibujar) return;

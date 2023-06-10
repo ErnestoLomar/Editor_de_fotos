@@ -2,6 +2,8 @@
 
 **Ernesto Lomar**
 
+- EL.v2.0:
+  - Implementando nueva funcionalidad de goma general y deshacer cambios.
 - EL.v1.6:
   - Arreglando bug de las letras en negritas al momento de mover textos.
   - Solucionando bug de que al mover los textos no toman su tamaño de fuente original.
