@@ -2,6 +2,9 @@
 
 **Ernesto Lomar**
 
+- EL.v2.1:
+  - Añadiendo la opción que la imagen se pueda seguir editando después de usar la barita mágica.
+  - agregando un icono de goma al cursor cuando se usa la goma mágica.
 - EL.v2.0:
   - Implementando nueva funcionalidad de goma general y deshacer cambios.
 - EL.v1.6:

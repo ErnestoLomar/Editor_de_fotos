@@ -68,6 +68,12 @@
         <!-- Este es el contenedor donde se dibujara el canvas -->
         <div id="canvas-container" style="background-color: white;"></div>
 
+        <style>
+            .erasing {
+                cursor: url(goma-de-borrar.png), auto;
+            }
+        </style>
+
         <!-- Este es el script que contiene el código JavaScript -->
         <script>
 
@@ -76,6 +82,8 @@
             
             // Obtenemos el canvas y el contexto de dibujo
             var canvas = document.createElement('canvas');
+
+            canvas.id = "canvas";
 
             //var canvas = document.getElementById('canvas');
             var ctx = canvas.getContext('2d');
@@ -165,9 +173,9 @@
                     image.addEventListener('load', function() {
                         canvas.width = image.width + 80;
                         canvas.height = image.height + 80;
-                        ctx.fillStyle = "red";
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
-                        ctx.drawImage(image, 40, 40);
+                        //ctx.fillStyle = "red";
+                        //ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(image, 0, 0);
                         backupImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         textos = [];
                         lines = [];
@@ -243,9 +251,10 @@
                 image.addEventListener('load', function() {
                     canvas.width = image.width + 80;
                     canvas.height = image.height + 80;
-                    ctx.fillStyle = "red";
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(image, 40, 40);
+                    //ctx.fillStyle = "red";
+                    //ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(image, 0, 0);
+                    backupImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
                     textos = [];
                     lines = [];
                 });
@@ -292,11 +301,12 @@
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                     // Agregamos el color de fondo del canvas
-                    ctx.fillStyle = "red";
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    //ctx.fillStyle = "red";
+                    //ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                     // Dibujamos la imagen
-                    ctx.drawImage(image, 40, 40);
+                    //ctx.drawImage(backupImage, 0, 0);
+                    ctx.putImageData(backupImage, 0, 0);
 
                     // Dibuja todas las líneas en el canvas
                     for (let line of lines) {
@@ -461,6 +471,7 @@
             // Agregamos un evento al botón barita magica
             document.getElementById('baritaMagica').addEventListener('click', function() {
                 if (!usandoBaritaMagica){
+                    canvas.classList.add("erasing");
                     usandoGoma = false;
                     usandoBaritaMagica = true;
                     dibujar = false;
@@ -478,6 +489,7 @@
                     document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
                     document.getElementById('edit-text').style.color = "#000";
                 }else if (usandoBaritaMagica){
+                    canvas.classList.remove("erasing");
                     usandoGoma = false;
                     usandoBaritaMagica = false;
                     dibujar = false;
@@ -549,11 +561,12 @@
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                         // Agregamos el color de fondo del canvas
-                        ctx.fillStyle = "red";
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        //ctx.fillStyle = "red";
+                        //ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                         // Dibujamos la imagen
-                        ctx.drawImage(image, 40, 40);
+                        //ctx.drawImage(backupImage, 0, 0);
+                        ctx.putImageData(backupImage, 0, 0);
 
                         // Dibuja todas las líneas en el canvas
                         for (let line of lines) {
@@ -607,10 +620,13 @@
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                     // Agregamos el color de fondo del canvas
-                    ctx.fillStyle = "red";
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    //ctx.fillStyle = "red";
+                    //ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    ctx.drawImage(image, 40, 40);
+                    //ctx.drawImage(backupImage, 40, 40);
+
+                    ctx.putImageData(backupImage, 0, 0);
+                    //image = ctx.getImageData(0, 0, canvas.width, canvas.height);  
 
                     // Dibuja todas las líneas en el canvas
                     for (let line of lines) {
@@ -660,6 +676,7 @@
                     ctx.clearRect(xBorrar, yBorrar, 10, 10);
                     ctx.fillStyle = "white";
                     ctx.fillRect(xBorrar, yBorrar, 10, 10);
+                    backupImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 }
 
                 // Si no se está dibujando, no hacer nada
@@ -679,10 +696,11 @@
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                     // Agregamos el color de fondo del canvas
-                    ctx.fillStyle = "red";
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    //ctx.fillStyle = "red";
+                    //ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    ctx.drawImage(image, 40, 40);
+                    //ctx.drawImage(backupImage, 40, 40);
+                    ctx.putImageData(backupImage, 0, 0);
 
                     // Dibuja todas las líneas en el canvas
                     for (let line of lines) {
@@ -737,11 +755,12 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 // Agregamos el color de fondo del canvas
-                ctx.fillStyle = "red";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                //ctx.fillStyle = "red";
+                //ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 // Dibujamos la imagen
-                ctx.drawImage(image, 40, 40);
+                //ctx.drawImage(backupImage, 40, 40);
+                ctx.putImageData(backupImage, 0, 0);
                 
                 // Dibuja todas las líneas en el canvas
                 for (let line of lines) {
