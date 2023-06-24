@@ -148,6 +148,7 @@
 
             // Agregamos un evento al botón de carga de imágenes
             document.getElementById('load-image-button').addEventListener('click', function() {
+                canvas.classList.remove("erasing");
                 
                 // Creamos un elemento de entrada de archivos
                 var input = document.createElement('input');
@@ -207,6 +208,7 @@
             });
 
             document.getElementById("edit-text").onclick = function() {
+                canvas.classList.remove("erasing");
                 if (!editarTextos){
                     document.getElementById('draw-line').style.backgroundColor = "#E5E5E5";
                     document.getElementById('draw-line').style.color = "#000";
@@ -247,6 +249,7 @@
             };
 
             document.getElementById("urlImagen").onclick = function() {
+                canvas.classList.remove("erasing");
                 image.src = 'img1.jpg';
                 image.addEventListener('load', function() {
                     canvas.width = image.width + 80;
@@ -265,6 +268,7 @@
 
             // Agregamos un evento al botón de guardado de imágenes
             document.getElementById('save-image-button').addEventListener('click', function() {
+                canvas.classList.remove("erasing");
                 // Creamos un enlace para descargar la imagen
                 var link = document.createElement('a');
                 link.download = 'imagen.png';
@@ -292,6 +296,7 @@
 
             // Agregamos un evento al botón de eliminar ultima linea dibujada
             document.getElementById('clear-last-line').addEventListener('click', function() {
+                canvas.classList.remove("erasing");
 
                 if (lines.length > 0){
                     // Eliminamos el ultimo elemento 
@@ -351,6 +356,7 @@
 
             // Agregamos un evento al botón de agregar texto
             document.getElementById('add-text').addEventListener('click', function() {
+                canvas.classList.remove("erasing");
                 if (!addText){
                     addText = true;
                     dibujar = false;
@@ -390,6 +396,7 @@
 
             // Agregamos un evento al botón dibujar linea
             document.getElementById('draw-line').addEventListener('click', function() {
+                canvas.classList.remove("erasing");
                 if (!dibujar){
                     dibujar = true;
                     addText = false;
@@ -430,6 +437,7 @@
 
             // Agregamos un evento al botón goma
             document.getElementById('goma').addEventListener('click', function() {
+                canvas.classList.remove("erasing");
                 if (!usandoGoma){
                     usandoGoma = true;
                     usandoBaritaMagica = false;
@@ -522,6 +530,7 @@
                 document.getElementById('add-text').style.color = "#000";
                 document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
                 document.getElementById('edit-text').style.color = "#000";
+                canvas.classList.remove("erasing");
             });
 
             // Función para manejar el evento mousedown
