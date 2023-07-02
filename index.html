@@ -55,6 +55,22 @@
         <!-- Este es el botón para iniciar la barita mágica -->
         <button id="baritaMagica" style="background-color: #E5E5E5; color: #000;">Barita Mágica</button>
 
+        <!-- Elemento de tamaño de borrado posibles-->
+        <select id="tamanioBorrado">
+            <option value="10">10</option>
+            <option value="12">12</option>
+            <option value="14">14</option>
+            <option value="16">16</option>
+            <option value="18">18</option>
+            <option value="20">20</option>
+            <option value="22">22</option>
+            <option value="24">24</option>
+            <option value="26">26</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+        </select>
+
         <!-- Este es el botón para deshacer cambios de la barita mágica -->
         <button id="deshacerCambios" style="background-color: #E5E5E5; color: #000;">Deshacer cambios</button>
 
@@ -68,14 +84,23 @@
         <!-- Este es el contenedor donde se dibujara el canvas -->
         <div id="canvas-container" style="background-color: white;"></div>
 
+        <div id="cursorRectangle"></div>
+
         <style>
-            .erasing {
-                cursor: url(goma-de-borrar.png), auto;
+            #cursorRectangle {
+                position: fixed;
+                display: none;
+                width: 10px;
+                height: 10px;
+                background-color: blue; /* Cambia el color según tus preferencias */
+                pointer-events: none; /* Permite que el cursor interactúe con los elementos subyacentes */
             }
         </style>
 
         <!-- Este es el script que contiene el código JavaScript -->
         <script>
+
+            var cursorRectangle = document.getElementById("cursorRectangle");
 
             // Obtenemos el contenedor del canvas
             var container = document.getElementById("canvas-container");
@@ -135,15 +160,26 @@
             // Combobox para escoger una fuente
             const combobox = document.getElementById("fuentes");
 
+            // Combobox para escoger un tamaño de borrado
+            const comboboxTamanioBorrado = document.getElementById("tamanioBorrado");
+
             // Encontramos si una cantidad se encuentra dentro de un rango
             const estaEnRango = (cantidad, minimo, maximo) => (cantidad - minimo) / (maximo - minimo);
 
             // Obtenemos la fuente escogida
             var fuenteEscogida = "8";
+
+            // Tamanio borrado
+            var valorTamanioBorrado = "10";
             
             // Función para guardar la fuente del texto
             combobox.addEventListener("change", function() {
                 fuenteEscogida = combobox.value;
+            });
+
+            // Función para guardar el tamaño del borrado de la barita mágica.
+            comboboxTamanioBorrado.addEventListener("change", function() {
+                valorTamanioBorrado = comboboxTamanioBorrado.value;
             });
 
             // Agregamos un evento al botón de carga de imágenes
@@ -479,7 +515,6 @@
             // Agregamos un evento al botón barita magica
             document.getElementById('baritaMagica').addEventListener('click', function() {
                 if (!usandoBaritaMagica){
-                    canvas.classList.add("erasing");
                     usandoGoma = false;
                     usandoBaritaMagica = true;
                     dibujar = false;
@@ -497,8 +532,8 @@
                     document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
                     document.getElementById('edit-text').style.color = "#000";
                 }else if (usandoBaritaMagica){
-                    canvas.classList.remove("erasing");
                     usandoGoma = false;
+                    canvas.style.cursor = "auto";
                     usandoBaritaMagica = false;
                     dibujar = false;
                     addText = false;
@@ -530,7 +565,7 @@
                 document.getElementById('add-text').style.color = "#000";
                 document.getElementById('edit-text').style.backgroundColor = "#E5E5E5";
                 document.getElementById('edit-text').style.color = "#000";
-                canvas.classList.remove("erasing");
+                canvas.style.cursor = "auto";
             });
 
             // Función para manejar el evento mousedown
@@ -610,9 +645,9 @@
                     }
                 }else if (usandoBaritaMagica){
                     backupImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    ctx.clearRect(x1, y1, 10, 10);
+                    ctx.clearRect(x1, y1, valorTamanioBorrado, valorTamanioBorrado);
                     ctx.fillStyle = "white";
-                    ctx.fillRect(x1, y1, 10, 10);
+                    ctx.fillRect(x1, y1, valorTamanioBorrado, valorTamanioBorrado);
                     mousePresionado = true;
                 }
             }
@@ -678,14 +713,30 @@
                     
                 }
 
-                if (usandoBaritaMagica && mousePresionado){
+                if (usandoBaritaMagica){
 
-                    xBorrar = event.pageX - canvas.offsetLeft;
-                    yBorrar = event.pageY - canvas.offsetTop;
-                    ctx.clearRect(xBorrar, yBorrar, 10, 10);
-                    ctx.fillStyle = "white";
-                    ctx.fillRect(xBorrar, yBorrar, 10, 10);
-                    backupImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    // Obtener las coordenadas del mouse dentro del canvas
+                    var rect = canvas.getBoundingClientRect();
+                    var x = event.clientX - rect.left;
+                    var y = event.clientY - rect.top;
+
+                    canvas.style.cursor = "None";
+
+                    cursorRectangle.style.width = valorTamanioBorrado + "px";
+                    cursorRectangle.style.height = valorTamanioBorrado + "px";
+
+                    // Actualizar la posición del rectángulo flotante
+                    cursorRectangle.style.left = (x + rect.left + window.scrollX - cursorRectangle.offsetWidth / 20) + "px";
+                    cursorRectangle.style.top = (y + rect.top + window.scrollY - cursorRectangle.offsetHeight / 20) + "px";
+
+                    if (mousePresionado){
+                        xBorrar = event.pageX - canvas.offsetLeft;
+                        yBorrar = event.pageY - canvas.offsetTop;
+                        ctx.clearRect(xBorrar, yBorrar, valorTamanioBorrado, valorTamanioBorrado);
+                        ctx.fillStyle = "white";
+                        ctx.fillRect(xBorrar, yBorrar, valorTamanioBorrado, valorTamanioBorrado);
+                        backupImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    }
                 }
 
                 // Si no se está dibujando, no hacer nada
@@ -735,6 +786,31 @@
                     ctx.lineTo(endX, endY);
                     ctx.stroke();
 
+                }
+            });
+
+            document.addEventListener("mouseover", function(event) {
+                // Mostrar el rectángulo flotante cuando entra en el canvas
+                if (event.target.id === "canvas" && usandoBaritaMagica) {
+                    // Obtener las coordenadas del mouse dentro del canvas
+                    var rect = canvas.getBoundingClientRect();
+                    var x = event.clientX - rect.left;
+                    var y = event.clientY - rect.top;
+
+                    canvas.style.cursor = "None";
+
+                    // Actualizar la posición del rectángulo flotante
+                    cursorRectangle.style.left = (x + rect.left + window.scrollX - cursorRectangle.offsetWidth / 20) + "px";
+                    cursorRectangle.style.top = (y + rect.top + window.scrollY - cursorRectangle.offsetHeight / 20) + "px";
+                    cursorRectangle.style.display = "block";
+                }
+            });
+
+            document.addEventListener("mouseout", function(event) {
+                // Ocultar el rectángulo flotante cuando sale del canvas
+                if (event.target.id === "canvas" && usandoBaritaMagica) {
+                    cursorRectangle.style.display = "none";
+                    canvas.style.cursor = "auto";
                 }
             });
 
